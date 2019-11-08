@@ -12,11 +12,23 @@ class tableviewcontrollerTableViewController: UITableViewController {
     var array:[String]?
     var image : UIImage?
     var textfield2 : UITextField?
-  @IBOutlet var tableviewdata: UITableView!
+  
+    
+    
+   
+    
+   
+    
+    @IBOutlet var tableviewdata: UITableView!
     
    
     @IBAction func newFolder(_ sender: UIBarButtonItem) {
-    let alertcontrol = UIAlertController(title: "New Folder", message: "Enter the name of folder", preferredStyle: .alert)
+    
+    
+    
+    
+    
+        let alertcontrol = UIAlertController(title: "New Folder", message: "Enter the name of folder", preferredStyle: .alert)
         alertcontrol.addTextField { (textfield) in
             textfield.text = ""
             //self.textfield = textfield
@@ -25,8 +37,8 @@ class tableviewcontrollerTableViewController: UITableViewController {
             
             
         let addaction = UIAlertAction(title: "Add item", style: .default) {(action) in
-            self.textfield2 = alertcontrol.textFields![0]
-            self.array!.append((self.textfield2!.text!))
+            let textfield1 = alertcontrol.textFields![0]
+            self.array!.append(textfield1.text!)
             print(self.array!)
             self.tableviewdata.reloadData()
                 
@@ -67,10 +79,9 @@ class tableviewcontrollerTableViewController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "normal"){
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "normalcell"){
       
         let arrayname = array![indexPath.row]
-            
        
         cell.textLabel?.text = arrayname
             
@@ -88,11 +99,18 @@ class tableviewcontrollerTableViewController: UITableViewController {
 
    
 // Override to support conditional editing of the table view.
+    //for delete rows in cells
+    
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
     }
-
+    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+        return "delete"
+    }
+//    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+//        return UITableViewCellEditingStyleDelete
+//    }
 // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -129,12 +147,17 @@ class tableviewcontrollerTableViewController: UITableViewController {
 //
 //    }
     
- //   override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-   //     return .none
-    //}
-    //override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-      //  return false
-    //}
+   override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    if self.tableView.isEditing{
+       return .none
+    }
+    else{
+        return .delete
+    }
+   }
+    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+       return false
+    }
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let moveobjects = self.array![sourceIndexPath.row]
        array?.remove(at: sourceIndexPath.row)
