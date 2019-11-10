@@ -52,6 +52,7 @@ class tableviewcontrollerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = editButtonItem
+        self.navigationItem.title = "Folders"
         
     array = []
     // Do any additional setup afterloading the view.
@@ -102,76 +103,76 @@ class tableviewcontrollerTableViewController: UITableViewController {
     //for delete rows in cells
     
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
-        return "delete"
-    }
-//    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-//        return UITableViewCellEditingStyleDelete
-//    }
-// Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-           // let item = array![indexPath.row]
-            array?.remove(at: indexPath.row)
-
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.reloadData()
+            // Return false if you do not want the specified item to be editable.
+            return true
         }
-    }
-//
-//
-//            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-//
-//    }
-//
-//
-//    @IBAction func editbutton(_ sender: UIBarButtonItem) {
-//
-//
-//
-//    }
-//
-//    // Override to support rearranging the table view.
-//    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-//
-//       let item = array![]
-//        array?.remove(at: IndexPath.row)
-//
-//
-//
-//
-//
-//    }
-    
-   override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-    if self.tableView.isEditing{
-       return .none
-    }
-    else{
-        return .delete
-    }
-   }
-    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-       return false
-    }
-    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let moveobjects = self.array![sourceIndexPath.row]
-       array?.remove(at: sourceIndexPath.row)
-        array?.insert(moveobjects, at: destinationIndexPath.row)
-         debugPrint("\(sourceIndexPath.row) => \(destinationIndexPath.row)")
+        override func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
+            return "delete"
+        }
+    //    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+    //        return UITableViewCellEditingStyleDelete
+    //    }
+    // Override to support editing the table view.
+        override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+            if editingStyle == .delete {
+               // let item = array![indexPath.row]
+                array?.remove(at: indexPath.row)
+
+                // Delete the row from the data source
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                tableView.reloadData()
+            }
+        }
+    //
+    //
+    //            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    //
+    //    }
+    //
+    //
+    //    @IBAction func editbutton(_ sender: UIBarButtonItem) {
+    //
+    //
+    //
+    //    }
+    //
+    //    // Override to support rearranging the table view.
+    //    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+    //
+    //       let item = array![]
+    //        array?.remove(at: IndexPath.row)
+    //
+    //
+    //
+    //
+    //
+    //    }
         
-    }
-//
-//
-//    // Override to support conditional rearranging of the table view.
- override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-//        // Return false if you do not want the item to be re-orderable.
-return true
-    }
+       override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if self.tableView.isEditing{
+           return .none
+        }
+        else{
+            return .delete
+        }
+       }
+        override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+           return false
+        }
+        override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+            let moveobjects = self.array![sourceIndexPath.row]
+           array?.remove(at: sourceIndexPath.row)
+            array?.insert(moveobjects, at: destinationIndexPath.row)
+             debugPrint("\(sourceIndexPath.row) => \(destinationIndexPath.row)")
+            
+        }
+    //
+    //
+    //    // Override to support conditional rearranging of the table view.
+     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+    //        // Return false if you do not want the item to be re-orderable.
+    return true
+        }
 //
 //
 //    /*
