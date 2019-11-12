@@ -36,6 +36,8 @@ class tableviewcontrollerTableViewController: UITableViewController {
         let alertcontrol = UIAlertController(title: "New Folder", message: "Enter the name of folder", preferredStyle: .alert)
         alertcontrol.addTextField { (textfield) in
             textfield.text = ""
+            //same name alert
+      
             //self.textfield = textfield
         }
             let okAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
@@ -43,7 +45,23 @@ class tableviewcontrollerTableViewController: UITableViewController {
             
         let addaction = UIAlertAction(title: "Add item", style: .default) {(action) in
             let textfield1 = alertcontrol.textFields![0]
-            self.array!.append(textfield1.text!)
+            if self.array!.contains(textfield1.text!) {
+                      let alertcontrollernametaken = UIAlertController(title: "Name Taken", message: "Please choose a different name", preferredStyle: .alert)
+                      let nametaken = UIAlertAction(title:"OK",style: .cancel,handler: nil)
+                      alertcontrollernametaken.addAction(nametaken)
+                      self.present(alertcontrollernametaken, animated: true, completion: nil)
+
+                  }
+            else{
+                 self.array!.append(textfield1.text!)
+            }
+           
+            
+            
+            
+            
+            
+            
             print(self.array!)
             self.tableviewdata.reloadData()
                 
@@ -57,7 +75,7 @@ class tableviewcontrollerTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.rightBarButtonItem = editButtonItem
-        self.navigationItem.title = "Folders"
+        //self.navigationItem.title = "Folders"
         
     array = []
     // Do any additional setup afterloading the view.
