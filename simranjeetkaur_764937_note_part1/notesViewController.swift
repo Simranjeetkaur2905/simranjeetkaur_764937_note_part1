@@ -10,18 +10,34 @@ import UIKit
 
 class notesViewController: UIViewController {
 
+    var currentindex = -1
     @IBOutlet weak var textView: UITextView!
-    // @IBOutlet weak var textView: UITextView!
-       var textString: String?
-       var taskTable: listTableViewController?
+    var delegateNotescontroller:listTableViewController?
+    var textString: String?
+    var segueID: String?
+    
        override func viewDidLoad() {
            super.viewDidLoad()
 
            // Do any additional setup after loading the view.
            textView.text = textString ?? ""
        }
+    
+    
        override func viewWillDisappear(_ animated: Bool) {
-           taskTable?.updateText(text: textView.text)
+        delegateNotescontroller?.updateText(text: textView.text )
+//
+        
+        //print(segueID!)
+//        if segueID! == "updateSegue"{
+//            delegateNotescontroller!.updateText(text: textView.text)
+//        }
+//        else{
+//            print("add notessss")
+//           // delegateNotescontroller!.addNotes(text: textView.text)
+//        }
+        
+           
        }
 
 

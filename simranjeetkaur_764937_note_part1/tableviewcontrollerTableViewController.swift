@@ -14,12 +14,13 @@
 import UIKit
 
 class tableviewcontrollerTableViewController: UITableViewController {
-    var array:[String]?
+   // var array:[String]?
     var image : UIImage?
     var textfield2 : UITextField?
   
+    var curFolderIndex = -1
     
-    
+   
    
     
    
@@ -30,10 +31,10 @@ class tableviewcontrollerTableViewController: UITableViewController {
     @IBAction func newFolder(_ sender: UIBarButtonItem) {
     
     
+    var alreadyExists = false
     
     
-    
-        let alertcontrol = UIAlertController(title: "New Folder", message: "Enter the name of folder", preferredStyle: .alert)
+    let alertcontrol = UIAlertController(title: "New Folder", message: "Enter the name of folder", preferredStyle: .alert)
         alertcontrol.addTextField { (textfield) in
             textfield.text = ""
             //same name alert
@@ -45,24 +46,34 @@ class tableviewcontrollerTableViewController: UITableViewController {
             
         let addaction = UIAlertAction(title: "Add item", style: .default) {(action) in
             let textfield1 = alertcontrol.textFields![0]
-            if self.array!.contains(textfield1.text!) {
-                      let alertcontrollernametaken = UIAlertController(title: "Name Taken", message: "Please choose a different name", preferredStyle: .alert)
-                      let nametaken = UIAlertAction(title:"OK",style: .cancel,handler: nil)
-                      alertcontrollernametaken.addAction(nametaken)
-                      self.present(alertcontrollernametaken, animated: true, completion: nil)
+            
+            let folderName = textfield1.text!
+            let folderNotes = folderwithnotes(folder: folderName, notes: [])
+            
+            
+            for items in folderwithnotes.data{
+                if items.folder == folderName{
+                    alreadyExists = true
+                    break
+                }
+            }
+            
+            
+            if alreadyExists {
+                  let alertcontrollernametaken = UIAlertController(title: "Name Taken", message: "Please choose a different name", preferredStyle: .alert)
+                  let nametaken = UIAlertAction(title:"OK",style: .cancel,handler: nil)
+                  alertcontrollernametaken.addAction(nametaken)
+                  self.present(alertcontrollernametaken, animated: true, completion: nil)
 
                   }
             else{
-                 self.array!.append(textfield1.text!)
+                folderwithnotes.data.append(folderNotes)
+//                UserDefaults.standard.set(textfield1.text, forKey: "myfolder")
+                
             }
            
             
-            
-            
-            
-            
-            
-            print(self.array!)
+            print(folderwithnotes.data)
             self.tableviewdata.reloadData()
                 
             }
@@ -74,12 +85,24 @@ class tableviewcontrollerTableViewController: UITableViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        
         self.navigationItem.rightBarButtonItem = editButtonItem
         //self.navigationItem.title = "Folders"
+        self.navigationItem.rightBarButtonItem?.tintColor = .white
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.view.backgroundColor = .lightGray
         
-    array = []
+//    array = []
     // Do any additional setup afterloading the view.
         
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let x = UserDefaults.standard.object(forKey: "myfolder") as? String{
+            textfield2?.text = x
+            print(x)
+        }
     }
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -89,29 +112,31 @@ class tableviewcontrollerTableViewController: UITableViewController {
     
 
     // MARK: - Table view data source
-
+/*
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
        return 1
         
     }
+ */
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return array?.count ?? 0
+        return folderwithnotes.data.count
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueReusableCell(withIdentifier: "normalcell"){
       
-        let arrayname = array![indexPath.row]
+            let arrayname = folderwithnotes.data[indexPath.row].folder
        
         cell.textLabel?.text = arrayname
             
         cell.imageView?.image = UIImage(named: "folder-icon")
+            cell.detailTextLabel?.text = "\(folderwithnotes.data[indexPath.row].notes.count)"
         // Configure the cell...
-        
+           // cell.detailTextLabel?.textColor = UIColor.white
             
         return cell
     }
@@ -139,7 +164,7 @@ class tableviewcontrollerTableViewController: UITableViewController {
         override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
             if editingStyle == .delete {
                // let item = array![indexPath.row]
-                array?.remove(at: indexPath.row)
+                folderwithnotes.data.remove(at: indexPath.row)
 
                 // Delete the row from the data source
                 tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -183,9 +208,9 @@ class tableviewcontrollerTableViewController: UITableViewController {
            return false
         }
         override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-            let moveobjects = self.array![sourceIndexPath.row]
-           array?.remove(at: sourceIndexPath.row)
-            array?.insert(moveobjects, at: destinationIndexPath.row)
+            let moveobjects = folderwithnotes.data[sourceIndexPath.row]
+            folderwithnotes.data.remove(at: sourceIndexPath.row)
+            folderwithnotes.data.insert(moveobjects, at: destinationIndexPath.row)
              debugPrint("\(sourceIndexPath.row) => \(destinationIndexPath.row)")
             
         }
@@ -202,11 +227,29 @@ class tableviewcontrollerTableViewController: UITableViewController {
 //    // MARK: - Navigation
 //
 //    // In a storyboard-based application, you will often want to do a little preparation before navigation
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    
+    if let detailview = segue.destination as? listTableViewController{
+        detailview.delegatetableview = self
+        if let tableviewcell = sender as?UITableViewCell{
+            if let index = tableView.indexPath(for: tableviewcell)?.row{
+        curFolderIndex = index
+                print(detailview.curFolderIndex)
+    }
+        }
+    }
+    
+
+    
 //        // Get the new view controller using segue.destination.
 //        // Pass the selected object to the new view controller.
 //    }
 //    */
 
 }
+     func reloadFolders(){
+           tableView.reloadData()
+    }
+    
 
+}
